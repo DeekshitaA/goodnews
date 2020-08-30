@@ -22,8 +22,8 @@ export default function NewsHome() {
                 </h1>
 
                 <div className={styles.grid}>
-                    {news.map(({ title, imageUrl, siteUrl }) => (
-                        <a href={siteUrl} className={styles.card}>
+                    {news.map(({ id, title, imageUrl, siteUrl }) => (
+                        <a key={id} href={siteUrl} className={styles.card}>
                             <h3>{title}</h3>
                             <img
                                 src={imageUrl}
