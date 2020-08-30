@@ -11,6 +11,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                 siteUrl: newsData.siteUrl,
                 imageUrl: newsData.imageUrl,
                 descr: newsData.descr,
+                title: newsData.title,
             },
         });
         res.status(201);
@@ -19,6 +20,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         res.status(500);
         res.json({ error: "Sorry unable to save news to database" });
     } finally {
-        await prisma.disconnect()
+        await prisma.$disconnect()
     }
 }
