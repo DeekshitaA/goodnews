@@ -1,8 +1,25 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client';
-import puppeteer from 'puppeteer-core'
+// import puppeteer from 'puppeteer-core'
 import chromium from 'chrome-aws-lambda'
 
+async function addToDB(newsArticles) {
+    const prisma = new PrismaClient({ log: ["query"] });
+    newsArticles.map(async data => {
+        await prisma.news.upsert({
+            where: { siteUrl: data.siteUrl },
+            update: {
+                imageUrl: data.imageUrl,
+                title: data.title
+            },
+            create: {
+                imageUrl: data.imageUrl,
+                siteUrl: data.siteUrl,
+                title: data.title
+            },
+        });
+    });
+}
 export default async function (req: NextApiRequest, res: NextApiResponse) {
     const browser = await chromium.puppeteer.launch({
         args: chromium.args,
@@ -11,7 +28,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         headless: true,
         ignoreHTTPSErrors: true,
     });
-    const prisma = new PrismaClient({ log: ["query"] });
 
     try {
         const { urlList } = req.body;
@@ -33,11 +49,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                             }
                         })
                     )
-                    newsArticles.map(async data => {
-                        await prisma.news.create({
-                            data
-                        });
-                    })
+                    addToDB(newsArticles);
                     break;
                 }
                 case 'https://www.goodnewsnetwork.org': {
@@ -51,12 +63,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
                             }
                         })
                     )
-                    console.log('goodnews', newsArticles)
-                    newsArticles.map(async data => {
-                        await prisma.news.create({
-                            data
-                        });
-                    })
+                    addToDB(newsArticles);
                     break;
                 }
             }
