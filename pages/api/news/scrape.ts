@@ -22,6 +22,7 @@ async function addToDB(newsArticles) {
 export default async function (req: NextApiRequest, res: NextApiResponse) {
     const browser = await puppeteer.launch({
         headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
 
     try {
