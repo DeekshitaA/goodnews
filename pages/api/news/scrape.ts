@@ -1,8 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client';
-// import puppeteer from 'puppeteer-core'
 import chromium from 'chrome-aws-lambda'
 
+const isProd = process.env.NODE_ENV === "production";
+let puppeteer;
+if (isProd) {
+    puppeteer = require("puppeteer-core");
+} else {
+    puppeteer = require("puppeteer");
+}
 async function addToDB(newsArticles) {
     const prisma = new PrismaClient({ log: ["query"] });
     newsArticles.map(async data => {
@@ -21,12 +27,10 @@ async function addToDB(newsArticles) {
     });
 }
 export default async function (req: NextApiRequest, res: NextApiResponse) {
-    const browser = await chromium.puppeteer.launch({
+    const browser = await puppeteer.launch({
         args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
         executablePath: await chromium.executablePath,
         headless: true,
-        ignoreHTTPSErrors: true,
     });
 
     try {
