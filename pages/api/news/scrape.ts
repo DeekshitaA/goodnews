@@ -1,9 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client';
-import puppeteer from 'puppeteer'
+import puppeteer from 'puppeteer-core'
+import chromium from 'chrome-aws-lambda'
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await chromium.puppeteer.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath,
+        headless: true,
+        ignoreHTTPSErrors: true,
+    });
     const prisma = new PrismaClient({ log: ["query"] });
 
     try {
