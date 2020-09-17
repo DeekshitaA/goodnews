@@ -1,14 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client';
-const chrome = require('chrome-aws-lambda');
-const isProd = process.env.NODE_ENV === "production";
-let puppeteer;
-console.log('isProd', isProd);
-if (isProd) {
-    puppeteer = require("puppeteer-core");
-} else {
-    puppeteer = require("puppeteer");
-}
+const chromium = require('chrome-aws-lambda');
+// const isProd = process.env.NODE_ENV === "production";
+// let puppeteer;
+// console.log('isProd', isProd);
+// if (isProd) {
+//     puppeteer = require("puppeteer-core");
+// } else {
+//     puppeteer = require("puppeteer");
+// }
 async function addToDB(newsArticles) {
     const prisma = new PrismaClient({ log: ["query"] });
     newsArticles.map(async data => {
@@ -27,11 +27,14 @@ async function addToDB(newsArticles) {
     });
 }
 export default async function (req: NextApiRequest, res: NextApiResponse) {
-    const browser = await puppeteer.launch({
-        args: chrome.args,
-        executablePath: await chrome.executablePath,
-        headless: true
+    const browser = await chromium.puppeteer.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath,
+        headless: true,
+        ignoreHTTPSErrors: true,
     });
+
 
     try {
         const { urlList } = req.body;
