@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 const chrome = require('chrome-aws-lambda');
 const isProd = process.env.NODE_ENV === "production";
 let puppeteer;
+console.log('isProd', isProd);
 if (isProd) {
     puppeteer = require("puppeteer-core");
 } else {
