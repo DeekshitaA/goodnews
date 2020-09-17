@@ -1,14 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client';
 const chrome = require('chrome-aws-lambda');
-// const isProd = process.env.NODE_ENV === "production";
-// let puppeteer;
-// console.log('isProd', isProd);
-// if (isProd) {
-//     puppeteer = require("puppeteer-core");
-// } else {
-//     puppeteer = require("puppeteer");
-// }
+const isProd = process.env.NODE_ENV === "production";
+let puppeteer;
+console.log('isProd', isProd);
+if (isProd) {
+    puppeteer = require("puppeteer-core");
+} else {
+    puppeteer = require("puppeteer");
+}
 async function addToDB(newsArticles) {
     const prisma = new PrismaClient({ log: ["query"] });
     newsArticles.map(async data => {
@@ -27,7 +27,7 @@ async function addToDB(newsArticles) {
     });
 }
 export default async function (req: NextApiRequest, res: NextApiResponse) {
-    const browser = await chrome.puppeteer.launch({
+    const browser = await puppeteer.launch({
         args: chrome.args,
         executablePath: await chrome.executablePath,
         headless: true
@@ -36,6 +36,16 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     try {
         const { urlList } = req.body;
         const page = await browser.newPage();
+        page.on("request", req => {
+            if (
+                req.resourceType() == "stylesheet" ||
+                req.resourceType() == "font"
+            ) {
+                req.abort();
+            } else {
+                req.continue();
+            }
+        });
         let news = [];
         for (const url of urlList) {
             console.log('url', url);
