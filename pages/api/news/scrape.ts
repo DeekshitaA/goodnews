@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client';
-const chromium = require('chrome-aws-lambda');
+// const chromium = require('chrome-aws-lambda');
+import puppeteer from 'puppeteer';
 // const isProd = process.env.NODE_ENV === "production";
 // let puppeteer;
 // console.log('isProd', isProd);
@@ -27,10 +28,7 @@ async function addToDB(newsArticles) {
     });
 }
 export default async function (req: NextApiRequest, res: NextApiResponse) {
-    const browser = await chromium.puppeteer.launch({
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
-        executablePath: await chromium.executablePath,
+    const browser = await puppeteer.launch({
         headless: true,
         ignoreHTTPSErrors: true,
     });
