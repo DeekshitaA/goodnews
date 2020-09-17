@@ -29,10 +29,8 @@ async function addToDB(newsArticles) {
 export default async function (req: NextApiRequest, res: NextApiResponse) {
     const browser = await chrome.puppeteer.launch({
         args: chrome.args,
-        defaultViewport: chrome.defaultViewport,
         executablePath: await chrome.executablePath,
-        headless: chrome.headless,
-        ignoreHTTPSErrors: true,
+        headless: true
     });
 
     try {
