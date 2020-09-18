@@ -34,7 +34,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         ignoreHTTPSErrors: true,
     });
 
-
     try {
         const { urlList } = req.body;
         const page = await browser.newPage();
