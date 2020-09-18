@@ -15,4 +15,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Trigger our build webhook to get New NewsItems
-      run: curl -d '{urlList:["https://www.goodnewsnetwork.org","https://www.positive.news"]}' -H "Content-Type:application/json" -X POST https://goodnews-app.herokuapp.com/api/news/scrape
+      run: curl -d '{"urlList":["https://www.goodnewsnetwork.org","https://www.positive.news"]}' -H "Content-Type:application/json" -X POST https://goodnews-app.herokuapp.com/api/news/scrape
