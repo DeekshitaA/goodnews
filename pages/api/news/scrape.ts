@@ -1,15 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client';
-// const chromium = require('chrome-aws-lambda');
+
 import puppeteer from 'puppeteer';
-// const isProd = process.env.NODE_ENV === "production";
-// let puppeteer;
-// console.log('isProd', isProd);
-// if (isProd) {
-//     puppeteer = require("puppeteer-core");
-// } else {
-//     puppeteer = require("puppeteer");
-// }
 async function addToDB(newsArticles) {
     const prisma = new PrismaClient({ log: ["query"] });
     newsArticles.map(async data => {
