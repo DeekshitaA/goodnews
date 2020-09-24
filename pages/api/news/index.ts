@@ -5,7 +5,13 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     const prisma = new PrismaClient({ log: ["query"] });
 
     try {
-        const news = await prisma.news.findMany();
+        const news = await prisma.news.findMany({
+            orderBy: [
+                {
+                    createdAt: 'desc',
+                },
+            ]
+        });
         res.status(200);
         res.json({ news });
     } catch (e) {
